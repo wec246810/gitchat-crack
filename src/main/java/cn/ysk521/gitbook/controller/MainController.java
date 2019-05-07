@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @description: controller
  * @author: yangshangkun
@@ -21,7 +23,7 @@ public class MainController {
 
 
     @RequestMapping("/")
-    public String get(@RequestParam String url) {
+    public String get(@RequestParam String url,HttpServletRequest request) {
         log.info("url " + url);
         String result = mainService.parse(url);
         return result;

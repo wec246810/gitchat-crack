@@ -1,13 +1,12 @@
 package cn.ysk521.gitbook.service;
 
-import cn.ysk521.gitbook.dao.CookieMapper;
 import cn.ysk521.gitbook.dto.BuyArticleResult;
+import cn.ysk521.gitbook.utils.PropertiesUtil;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +23,9 @@ import java.io.IOException;
 @Service
 @Slf4j
 public class MainService {
-    @Autowired
-    private CookieMapper cookieMapper;
-
 
     public String parse(String url) {
-        String cookie = cookieMapper.findCookie().get(0);
+        String cookie = (String) PropertiesUtil.get("cookie");
         Document readArticleDocument, articleDocument;
         String result = "解析失败,请联系管理员！";
         try {
@@ -45,8 +41,6 @@ public class MainService {
             //判断文章是否已经买过，没买过的话，先买文章
             Elements activityOrderPayBtn = readArticleDocument.select("#activityOrderPayBtn");
 
-            log.info("activityOrderPayBtn :" + JSONObject.toJSONString(activityOrderPayBtn));
-
             if (activityOrderPayBtn != null) {
                 if (buyArticle(url, cookie)) {
                     readArticleDocument = Jsoup.connect(url).header("Cookie", cookie).get();
@@ -60,8 +54,8 @@ public class MainService {
 
             Elements alreadyActivityOrderBtn = readArticleDocument.select("#alreadyActivityOrderBtn");
 
-            if (activityOrderBtn == null && !activityOrderBtn.toString().contains("阅读文章")) {
-                return "文章尚未发布,请选择其他文章！";
+            if (!readArticleDocument.toString().contains("阅读文章")) {
+                return "文章尚未发布或无法阅读,请选择其他chat！";
             }
 
 
