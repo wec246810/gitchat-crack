@@ -2,10 +2,9 @@ package cn.ysk521.gitbook.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.ResourceUtils;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Properties;
 
 /**
@@ -43,8 +42,11 @@ public class PropertiesUtil {
         //创建输入流，用来读取文件
         InputStream is;
         ClassPathResource classPathResource = new ClassPathResource(propertiesName);
+
+
         try {
-            is = classPathResource.getInputStream();
+//            is = classPathResource.getInputStream();
+            is = new BufferedInputStream(new FileInputStream(ResourceUtils.getFile("file:" + propertiesName)));
             prop.load(is);
         } catch (FileNotFoundException e) {
             log.error("配置文件{}不存在", propertiesName);

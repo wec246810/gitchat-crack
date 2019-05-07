@@ -23,7 +23,6 @@ import java.io.IOException;
 @Service
 @Slf4j
 public class MainService {
-
     public String parse(String url) {
         String cookie = (String) PropertiesUtil.get("cookie");
         Document readArticleDocument, articleDocument;
@@ -75,11 +74,11 @@ public class MainService {
                     .toString();
 
 //          #profileImg
-            String avatar = articleDocument.select("#profileImg").attr("src").toString();
+            String avatar = articleDocument.select("#profileImg").attr("src");
 
             //替换资源
             result = result.replaceAll("src=\"/", "src=\"https://gitbook.cn");
-            result = result.replaceAll("href=\"/", "href=\"https:////gitbook.cn//");
+            result = result.replaceAll("href=\"/", "href=\"https:////gitbook.cn/");
             //替换头像
             result = result.replaceAll(avatar, "https://images.gitbook.cn/FnzjNghzs_ktFPUKeLaFX38rbNsL");
         } catch (IOException e) {
